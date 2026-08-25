@@ -34,8 +34,21 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleRelease
 
+      - name: Sign APK
+        run: |
+          keytool -genkey -v -keystore key.jks -alias mykey -keyalg RSA -keysize 2048 -validity 10000 \
+            -dname "CN=LGL, OU=LGL, O=LGL, L=LGL, S=LGL, C=US" \
+            -storepass password123 -keypass password123
+          $ANDROID_HOME/build-tools/$(ls $ANDROID_HOME/build-tools | tail -1)/apksigner sign \
+            --ks key.jks \
+            --ks-key-alias mykey \
+            --ks-pass pass:password123 \
+            --key-pass pass:password123 \
+            --out app/build/outputs/apk/release/app-release-signed.apk \
+            app/build/outputs/apk/release/app-release-unsigned.apk
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: app/build/outputs/apk/release/*.apk
+          path: app/build/outputs/apk/release/app-release-signed.apk
