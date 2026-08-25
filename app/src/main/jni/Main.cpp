@@ -142,8 +142,8 @@ void Changes(JNIEnv *env, jclass clazz, jobject obj, jint featNum, jstring featN
 void hack_thread() {
     while (!isLibraryLoaded(targetLibName)) sleep(1);
 #if defined(__aarch64__)
-    HOOK(targetLibName, OBFUSCATE("0x10D8EC0"), hook_IEnumReadObj, orig_IEnumReadObj);
-    HOOK(targetLibName, OBFUSCATE("0x10D90B0"), hook_RpcSyncObj,   orig_RpcSyncObj);
+HOOK(targetLibName, "0x10D8EC0", hook_IEnumReadObj, orig_IEnumReadObj);
+HOOK(targetLibName, "0x10D90B0", hook_RpcSyncObj,   orig_RpcSyncObj);
     LOGI(OBFUSCATE("[objData] hooks installed"));
 #endif
     LOGI(OBFUSCATE("Done"));
